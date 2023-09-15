@@ -44,7 +44,7 @@ Criar um proxy para acesso direto via api
 kubectl proxy --port=8080
 ```
 
-_(**deplotment.yaml**)_
+_(**[deployment.yaml](k8s/deployment.yaml)**)_
 
 ------ 
 
@@ -52,13 +52,21 @@ _(**deplotment.yaml**)_
 
 
 Services => NodePort -> ClusterIP > LoadBalancer
-_(**service.yaml**)_
+_(**[service.yaml](k8s/service.yaml)**)_
+
 
 ## Objetos de configuração <a id="config"></a>
 
-Objetos de configuração. Variaveis de ambiente: ConfigMap _(**configmap-env.yaml**)_
-Como injetar dependencia no app _(**configmap-family.yaml**)_
-Secrets _(**secret.yaml**)_
+Objetos de configuração. Variaveis de ambiente: ConfigMap 
+_(**[configmap.yaml](k8s/configmap.yaml)**)_
+
+
+Como injetar dependencia no app
+_(**[configmap-family.yaml](k8s/configmap-family.yaml)**)_
+
+Secrets  _(**[secret.yaml](k8s/secret.yaml)**)_
+
+
 
 
 ## Probes <a id="probes"></a>
@@ -73,13 +81,16 @@ Verifica se a aplicação está pronta para receber trafégo
 - _startupProbe_
 Verifica se o container está pronto.
 
+_(**[deployment.yaml](k8s/deployment.yaml)**)_
+
+
 ## Recursos e escala <a id="hpa"></a>
 
 Sobre monitoramento dos recursos é possivel avaliar via metrics-server.
 é possivel limitar tanto a cpu quanto a memória disponível para cada pod. unidade basica de cpu é o vCPU. 1vCPU equivale 1000m (milicores)
 
 Para escalar a aplicação com base a utilização do recurso é possivel utilizar o HorizontalPodAutoscaler
-_(**hpa.yaml**)_
+_(**[hpa.yaml](k8s/hpa.yaml)**)_
 
 
 Stressar a aplicação utilizando fortio
@@ -92,21 +103,27 @@ kubectl run -it fortio --rm --image=fortio/fortio -- load -qps 800 -t 120s -c 70
 Caso precise ordenamento na subida/descida dos pos e importante utilizar o StatefulSet
 
 Para ilustrar essa aplicação foi utilizado uma imagem mysql. 
-_(**statefulset.yaml**)_
+_(**[statefulset.yaml](k8s/statefulset.yaml)**)_
 
-Sobre a montagem de volume é possivel fazer 2 maneiras. um volume estático total _(**pv.yaml**)_
-Ou de maneira dinâmica através do PersistentVolumeClaim  _(**pvc.yaml**)_
+
+Sobre a montagem de volume é possivel fazer 2 maneiras. um volume estático total 
+
+_(**[pv.yaml](k8s/pv.yaml)**)_
+
+Ou de maneira dinâmica através do PersistentVolumeClaim  
+_(**[pvc.yaml](k8s/pvc.yaml)**)_
 
 é possivel fazer uma associação dinâmica dos volumes através do volumeClaimTemplates
 
 
 Para conseguir direcionar o trafégo diretamente a um pod espécifico é utilizado outro tipo de serviço chamado headless service.
-_(**mysql-service-h.yaml**)_
-
+_(**[mysql-service-h.yaml](k8s/mysql-service-h.yaml)**)_
 
 ## Ingress <a id="ingress"></a>
 
-Ingress serve como uma especie de roteiador para redirecionar os multiplos serviços a partir de um unico endereço fazendo o loadbalancer _(**ingress.yaml**)_
+Ingress serve como uma especie de roteiador para redirecionar os multiplos serviços a partir de um unico endereço fazendo o loadbalancer 
+
+_(**[ingress.yaml](k8s/ingress.yaml)**)_
 
 Ingress permite reduzir o custo de aplicação ao utilizar apenas um ponto acesso. ex: _**API Gateway**_
 
@@ -114,7 +131,8 @@ Ingress permite reduzir o custo de aplicação ao utilizar apenas um ponto acess
 ## Cert-manager <a id="tls"></a>
 Para realizar a certificação TLS utiliza-se o Cert-manager para gerenciar as credenciais. A emissao é feita através do let's encrypt
 
-_(**cluster-issuer.yaml**)_
+
+_(**[cluster-issuer.yaml](k8s/cluster-issuer.yaml)**)_
 
 ## Namespaces e Service Accounts <a id="ns"></a>
 
@@ -144,7 +162,5 @@ kubectl config use-context dev
 Service Accounts permite configurar Roles para restrigir o acesso caso exista uma vulnerabilidade na aplicação.
 
 Para ilustrar esses conceitos foi criado um deploy simples na pasta namespaces
-
-_(**security.yaml**)_
-
-
+_(**[deployment.yaml](k8s/namespaces/deployment.yaml)**)_
+_(**[security.yaml](k8s/namespaces/security.yaml)**)_
